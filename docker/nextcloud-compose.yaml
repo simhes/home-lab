@@ -15,7 +15,7 @@ services:
       - ./html:/var/www/html
       - ./custom_apps:/var/www/html/custom_apps
       - ./nextcloud/config:/var/www/html/config
-      - /mnt/data/ncdata/data:/var/www/html/data
+      - /mnt/data/docker/ncdata/data:/var/www/html/data
     environment:
       - PUID=1000
       - PGID=1000
