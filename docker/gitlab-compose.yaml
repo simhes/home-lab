@@ -19,9 +19,9 @@ services:
       - '443:443'
       - '2424:22'
     volumes:
-      - '/opt/docker/volumes/gitlab/config:/etc/gitlab'
-      - '/opt/docker/volumes/gitlab/logs:/var/log/gitlab'
-      - '/mnt/data/gitlab-data/data:/var/opt/gitlab'
+      - './config:/etc/gitlab'
+      - './logs:/var/log/gitlab'
+      - '/mnt/data/docker/gitlab-data/data:/var/opt/gitlab'
     shm_size: '256m'
 
 networks:
