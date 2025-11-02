@@ -1,0 +1,29 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    networks:
+      - frontend
+      - backend
+    hostname: 'gitlab.home'
+#    environment:
+#      GITLAB_OMNIBUS_CONFIG: |
+#        # Add any other gitlab.rb configuration here, each on its own line
+#        external_url 'https://gitlab.example.com'
+#        gitlab_rails['gitlab_shell_ssh_port'] = 2424
+    ports:
+      - '84:80'
+      - '443:443'
+      - '2424:22'
+    volumes:
+      - '/opt/docker/volumes/gitlab/config:/etc/gitlab'
+      - '/opt/docker/volumes/gitlab/logs:/var/log/gitlab'
+      - '/mnt/data/gitlab-data/data:/var/opt/gitlab'
+    shm_size: '256m'
+
+networks:
+  frontend:
+    external: true
+  backend:
+    external: true

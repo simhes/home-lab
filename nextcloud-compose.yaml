@@ -1,0 +1,102 @@
+services:
+  nextcloud:
+    image: nextcloud
+    container_name: nextcloud
+    restart: unless-stopped
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - nextclouddb
+      - redis
+    ports:
+      - 8081:80
+    volumes:
+      - /opt/docker/volumes/nextcloud/nextcloud/html:/var/www/html
+      - /opt/docker/volumes/nextcloud/nextcloud/custom_apps:/var/www/html/custom_apps
+      - /opt/docker/volumes/nextcloud/nextcloud/config:/var/www/html/config
+      - /mnt/data/ncdata/data:/var/www/html/data
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Stockholm
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=dbpassword
+      - MYSQL_HOST=nextcloud-db
+      - REDIS_HOST=nextcloud-redis
+
+  nextclouddb:
+    image: mariadb
+    container_name: nextcloud-db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    networks:
+      - backend
+    volumes:
+      - /opt/docker/volumes/nextcloud/mariadb/nextclouddb:/var/lib/mysql
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Stockholm
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_PASSWORD=dbpassword
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+# enabel collabra: https://www.collaboraonline.com/quick-tryout-nextcloud-docker/
+  collabora:
+    image: collabora/code
+    container_name: nextcloud-collabora
+    restart: unless-stopped
+    networks:
+      - frontend
+      - backend
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Stockholm
+      - password=dbpassword
+      - username=nextcloud
+      - domain=192\\.168\\.0\\.200(:[0-9]+)? #nextcloud contegner namn
+      - extra_params= |
+          --o:ssl.enable=false
+          --o:user_interface.use_integration_theme=false
+          --o:ssl.termination=true
+    ports:
+      - 9980:9980
+    cap_add:
+      - MKNOD
+# docker exec -u www-data nextcloud php occ config:app:set richdocuments wopi_allowlist --value="nextcloud"
+# för att bli av mer varning: "You have not configured the allow-list for WOPI requests"
+
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    volumes:
+      - /opt/docker/volumes/nextcloud/redis:/data
+    networks:
+      - backend
+
+#  nginx-proxy:
+#    image: 'jc21/nginx-proxy-manager:latest'
+#    container_name: nginx-proxy
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=America/Los_Angeles
+#    restart: unless-stopped
+ #   ports:
+ #     - '80:80'
+ #     - '81:81'
+ #     - '443:443'
+ #   volumes:
+ #     - ./data:/data
+ #     - ./letsencrypt:/etc/letsencrypt
+
+networks:
+  frontend:
+    external: true
+  backend:
+    external: true
+
