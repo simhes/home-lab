@@ -4,6 +4,8 @@ volumes:
 services:
   wg-easy:
     environment:
+      - PUID=1000
+      - PGID=1000
       - PORT=51821
       - HOST=0.0.0.0
       - INSECURE=true

@@ -12,9 +12,9 @@ services:
     ports:
       - 8081:80
     volumes:
-      - /opt/docker/volumes/nextcloud/nextcloud/html:/var/www/html
-      - /opt/docker/volumes/nextcloud/nextcloud/custom_apps:/var/www/html/custom_apps
-      - /opt/docker/volumes/nextcloud/nextcloud/config:/var/www/html/config
+      - ./html:/var/www/html
+      - ./custom_apps:/var/www/html/custom_apps
+      - ./nextcloud/config:/var/www/html/config
       - /mnt/data/ncdata/data:/var/www/html/data
     environment:
       - PUID=1000
@@ -34,7 +34,7 @@ services:
     networks:
       - backend
     volumes:
-      - /opt/docker/volumes/nextcloud/mariadb/nextclouddb:/var/lib/mysql
+      - ./mariadb/nextclouddb:/var/lib/mysql
     environment:
       - PUID=1000
       - PGID=1000
@@ -74,7 +74,7 @@ services:
     image: redis:alpine
     container_name: nextcloud-redis
     volumes:
-      - /opt/docker/volumes/nextcloud/redis:/data
+      - ./redis:/data
     networks:
       - backend
 
