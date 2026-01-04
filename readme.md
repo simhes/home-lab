@@ -5,7 +5,7 @@ my homlab setup:)
 - docker
 - vm
 
-os: ubuntu 24 lts
+os: proxmox
 
 ## docker setup
 
@@ -13,9 +13,15 @@ os: ubuntu 24 lts
 - backup plan see "back-plan.md"
 
 ## virituqal machine
-
-runs with kvm and controles with vmm
+| vm       | os            |
+|:---------|:--------------|
+| services | ubuntu 24 lts |
+| remote   | ubuntu 22 lts |
+| work     | ubuntu 22 lts |
+| game     | fedora 42     |
 
 ## backup
 
 under way
+
+proxmomx backup server
